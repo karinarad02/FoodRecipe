@@ -16,7 +16,6 @@ import {
 
 export default function FavoriteScreen() {
   const navigation = useNavigation();
-
   const favoriteRecipes = useSelector((state) => state.favorites);
   const favoriteRecipesList = favoriteRecipes?.favoriterecipes || [];
 
@@ -26,16 +25,9 @@ export default function FavoriteScreen() {
         <Text style={styles.emptyText}>No favorite recipes yet!</Text>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
-          style={{
-            backgroundColor: "#2563EB",
-            padding: 10,
-            borderRadius: 5,
-            marginTop: 10,
-            width: 100,
-            alignItems: "center",
-          }}
+          style={styles.goBackButton}
         >
-          <Text style={{ color: "#fff" }}>Go back</Text>
+          <Text style={styles.goBackText}>Go back</Text>
         </TouchableOpacity>
       </View>
     );
@@ -45,55 +37,37 @@ export default function FavoriteScreen() {
     <View style={{ flex: 1 }}>
       {/* Heading */}
       <View testID="FavoriteRecipes">
-        <Text
-          style={{
-            fontSize: hp(3.8),
-            marginTop: hp(4),
-            marginLeft: 20,
-            fontWeight: "600",
-            color: "#4B5563",
-          }}
-        >
-          My Favorite Recipes
-        </Text>
+        <Text style={styles.heading}>My Favorite Recipes</Text>
       </View>
 
       {/* Go back button */}
       <TouchableOpacity
         onPress={() => navigation.goBack()}
-        style={{
-          backgroundColor: "#2563EB",
-          padding: 10,
-          borderRadius: 5,
-          marginTop: 10,
-          width: 100,
-          alignItems: "center",
-          marginLeft: 20,
-        }}
+        style={styles.goBackButton}
       >
-        <Text style={{ color: "#fff" }}>Go back</Text>
+        <Text style={styles.goBackText}>Go back</Text>
       </TouchableOpacity>
 
       {/* FlatList of favorite recipes */}
       <FlatList
         data={favoriteRecipesList}
-        keyExtractor={(item) => item.idFood.toString()}
+        keyExtractor={(item) => item.recipe.recipeId.toString()}
         contentContainerStyle={styles.listContentContainer}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.cardContainer}
             onPress={() =>
-              navigation.navigate("RecipeDetail", { recipe: item })
+              navigation.navigate("RecipeDetail", { recipe: item.recipe })
             }
           >
             <Image
-              source={{ uri: item.strMealThumb }}
+              source={{ uri: item.recipe.recipeImage }}
               style={styles.recipeImage}
             />
             <Text style={styles.recipeTitle}>
-              {item.strMeal.length > 20
-                ? `${item.strMeal.substring(0, 20)}...`
-                : item.strMeal}
+              {item.recipe.recipeName.length > 20
+                ? `${item.recipe.recipeName.substring(0, 20)}...`
+                : item.recipe.recipeName}
             </Text>
           </TouchableOpacity>
         )}
@@ -110,7 +84,26 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: hp(2.5),
-    color: "#6B7280", // text-neutral-600
+    color: "#6B7280",
+  },
+  goBackButton: {
+    backgroundColor: "#2563EB",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+    width: 100,
+    alignItems: "center",
+    marginLeft: 20,
+  },
+  goBackText: {
+    color: "#fff",
+  },
+  heading: {
+    fontSize: hp(3.8),
+    marginTop: hp(4),
+    marginLeft: 20,
+    fontWeight: "600",
+    color: "#4B5563",
   },
   listContentContainer: {
     paddingHorizontal: wp(4),
